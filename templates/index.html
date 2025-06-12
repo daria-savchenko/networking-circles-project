@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Camera Feed</title>
+    <style>
+      body {
+        background: black;
+        text-align: center;
+      }
+      img {
+        border: 5px solid white;
+        width: 80vw;
+        margin-top: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="color: white">Real-Time Detection</h1>
+    <img src="{{ url_for('video_feed') }}" />
+  </body>
+</html>

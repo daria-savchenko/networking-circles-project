@@ -1,0 +1,21 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# System files
+.DS_Store
+
+# Flask cache / sessions
+instance/
+.webassets-cache/
+
+# VS Code settings (optional)
+.vscode/
