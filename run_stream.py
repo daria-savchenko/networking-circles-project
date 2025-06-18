@@ -40,12 +40,16 @@ def generate_frames():
         net.setInput(blob)
         detections = net.forward()
 
+        person_count = 0
+
         for i in np.arange(0, detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > 0.4:
                 idx = int(detections[0, 0, i, 1])
                 if CLASSES[idx] != "person":
                     continue
+
+                person_count += 1
 
                 box = detections[0, 0, i, 3:7] * np.array([W, H, W, H])
                 (startX, startY, endX, endY) = box.astype("int")
@@ -79,10 +83,8 @@ def generate_frames():
                         # Draw one sparkling dot
                         cv2.circle(output, (x + jitter_x, y + jitter_y), size, color, -1)
 
-                label = f"Person: {int(confidence * 100)}%"
-                cv2.putText(output, label, (center_x - radius, center_y - radius - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
+        print(f"People: {person_count}")  # 👈 log total to console
+        
         # Encode frame
         ret, buffer = cv2.imencode('.jpg', output)
         frame = buffer.tobytes()
