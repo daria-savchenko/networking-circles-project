@@ -48,10 +48,14 @@ def generate_frames():
                 box = detections[0, 0, i, 3:7] * np.array([W, H, W, H])
                 (startX, startY, endX, endY) = box.astype("int")
 
-                cv2.rectangle(output, (startX, startY), (endX, endY), (0, 255, 0), 2)
+                center_x = int((startX + endX) / 2)
+                center_y = int((startY + endY) / 2)
+                radius = int(max(endX - startX, endY - startY) / 2)
+
+                cv2.circle(output, (center_x, center_y), radius, (0, 255, 0), 2)
                 label = f"Person: {int(confidence * 100)}%"
-                cv2.putText(output, label, (startX, startY - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.putText(output, label, (center_x - radius, center_y - radius - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         # Encode frame
         ret, buffer = cv2.imencode('.jpg', output)
