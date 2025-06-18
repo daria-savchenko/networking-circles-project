@@ -2,6 +2,8 @@ import cv2
 import imutils
 import numpy as np
 from mylib import config
+import math
+import random
 
 # Load model
 net = cv2.dnn.readNetFromCaffe(
@@ -52,7 +54,31 @@ def generate_frames():
                 center_y = int((startY + endY) / 2)
                 radius = int(max(endX - startX, endY - startY) / 2)
 
-                cv2.circle(output, (center_x, center_y), radius, (0, 255, 0), 2)
+                # How many dots to draw around the circle
+                dot_count = 100  # base number of dots per circle
+
+                for layer in range(3):  # draw 3 layers of particles
+                    ring_radius = radius + random.randint(-3, 3)  # slightly inner/outer rings
+                    for j in range(dot_count):
+                        angle = 2 * math.pi * j / dot_count
+                        x = int(center_x + ring_radius * math.cos(angle))
+                        y = int(center_y + ring_radius * math.sin(angle))
+
+                        # Jitter for organic sparkle
+                        jitter_x = random.randint(-2, 2)
+                        jitter_y = random.randint(-2, 2)
+
+                        # Vary size and color slightly
+                        size = random.choice([1, 1, 2])
+                        color = (
+                            0,
+                            random.randint(220, 255),  # greenish shimmer
+                            random.randint(200, 255)
+                        )
+
+                        # Draw one sparkling dot
+                        cv2.circle(output, (x + jitter_x, y + jitter_y), size, color, -1)
+
                 label = f"Person: {int(confidence * 100)}%"
                 cv2.putText(output, label, (center_x - radius, center_y - radius - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
