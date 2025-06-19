@@ -16,6 +16,11 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle",
            "horse", "motorbike", "person", "pottedplant", "sheep", "sofa",
            "train", "tvmonitor"]
 
+# Offsets to shift the position of the detection overlays
+OFFSET_X = 40  # horizontal shift (negative = move left)
+OFFSET_Y = -40  # vertical shift (negative = move up)
+
+
 def generate_frames():
     cap = cv2.VideoCapture(config.url)
 
@@ -81,10 +86,11 @@ def generate_frames():
                         )
 
                         # Draw one sparkling dot
-                        cv2.circle(output, (x + jitter_x, y + jitter_y), size, color, -1)
+                        cv2.circle(output, (x + jitter_x + OFFSET_X, y + jitter_y + OFFSET_Y), size, color, -1)
+
 
         print(f"People: {person_count}")  # 👈 log total to console
-        
+
         # Encode frame
         ret, buffer = cv2.imencode('.jpg', output)
         frame = buffer.tobytes()
